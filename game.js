@@ -6,7 +6,7 @@ kaboom({
     clearColor: [0,0,0,1]
 });
 
-const MOVE_SPEED = 160
+const MOVE_SPEED = 200
 
 // Error with import images
 
@@ -61,27 +61,121 @@ scene("game", ({level,score}) => {
 
     const maps = [
         [
+             //Tutorial - Level 1
+            'yc)cccc)cw',
+            ')(   ~  ()',
+            'a    {   b',
+            'a     (((b',
+            'a       $b',
+            'a     (((b',
+            'a    {   b',
+            ')(      ()',
+            'xd)dddd)dz',
+        ],
+        [   
+            //Level 2
+            'yccc^^cccw',
+            'a(      (b',
+            'a        b',
+            'a * )) * b',
+            'a        b',
+            'a * )) * b',
+            'a        b',
+            'a(      (b',
+            'xddddddddz',
+        ],
+        [
+            // Level 3
+            'yccccccccw',
+            'a((((((((b',
+            ')        )',
+            'a{       b',
+            'a     }~$b',
+            'a{       b',
+            ')   ~    )',
+            'a((((((((b',
+            'xddddddddz',
+        ],
+        [
+            // Level 4
             'ycc)cc)ccw',
             'a(   $  (b',
             'a  *     b',
-            'a     }  b',
-            '%        b',
+            'a  }  }  b',
+            'a        b',
             'a   }    b',
             'a  *     b',
             'a(      (b',
             'xdd)dd)ddz',
         ],
         [
-            'yccccccccw',
-            'a       $b',
-            ')  }     )',
-            'a        b',
-            'a    }   b',
-            'a        b',
-            ')        )',
-            'a     }  b',
-            'xddddddddz',
+             // Level 5
+            'yc))))))cw',
+            'a    ~ ~ b',
+            'a    *   )',
+            'a   *{}} b',
+            'a  } }$  b',
+            'a   *    b',
+            'a }{ *}} )',
+            'a    ~ ~ b',
+            'xd))))))dz',
         ],
+        // More levels soon
+        // [
+        //     'yccccccccw',
+        //     'a       $b',
+        //     ')  }     )',
+        //     'a        b',
+        //     'a    }   b',
+        //     'a        b',
+        //     ')        )',
+        //     'a     }  b',
+        //     'xddddddddz',
+        // ],
+        // [
+        //     'yccccccccw',
+        //     'a       $b',
+        //     ')  }     )',
+        //     'a        b',
+        //     'a    }   b',
+        //     'a        b',
+        //     ')        )',
+        //     'a     }  b',
+        //     'xddddddddz',
+        // ],
+        // [
+        //     'yccccccccw',
+        //     'a       $b',
+        //     ')  }     )',
+        //     'a        b',
+        //     'a    }   b',
+        //     'a        b',
+        //     ')        )',
+        //     'a     }  b',
+        //     'xddddddddz',
+        // ],
+        // [
+        //     'yccccccccw',
+        //     'a       $b',
+        //     ')  }     )',
+        //     'a        b',
+        //     'a    }   b',
+        //     'a        b',
+        //     ')        )',
+        //     'a     }  b',
+        //     'xddddddddz',
+        // ],
+        // [
+        //     'yccccccccw',
+        //     'a       $b',
+        //     ')  }     )',
+        //     'a        b',
+        //     'a    }   b',
+        //     'a        b',
+        //     ')        )',
+        //     'a     }  b',
+        //     'xddddddddz',
+        // ],
     
     ]
 
@@ -96,17 +190,21 @@ scene("game", ({level,score}) => {
         "x": [sprite("bottom-left-wall"),solid(),'wall'],
         "y": [sprite("top-left-wall"),solid(),'wall'],
         "z": [sprite("bottom-right-wall"),solid(),'wall'],
-        "%": [sprite("left-door"),solid()],
+        "%": [sprite("left-door"),'next-level'],
         "^": [sprite("top-door"),'next-level'],
         "$": [sprite("stairs"),'next-level'],
         "*": [sprite("slicer"), 'slicer', {dir: -1},'dangerous'],
+        "~": [sprite("slicer"), 'verticalslicer', {dir: 1},'dangerous'],
         "}": [sprite("skeletor"),'skeletor',{dir: -1, timer: 0},'dangerous'],
+        "{": [sprite("skeletor"),'horizontalskeletor',{dir: 1, timer: 0},'dangerous'],
         ")": [sprite("lanterns"),solid(),'wall'],
-        "(": [sprite("fire-pot"),solid(),'wall'],
+        "(": [sprite("fire-pot"),solid()],
     }
     addLevel(maps[level],levelCfg)
 
     add([sprite('bg'), layer('bg')])
+
+    add([text('level'+ ' ' + parseInt(level + 1)), pos(400,485), scale(2)])
 
     const scoreLabel = add([
         text('0'),
@@ -118,11 +216,10 @@ scene("game", ({level,score}) => {
         scale(2)
     ])
 
-    add([text('level' + parseInt(level + 1)), pos(400,485), scale(2)])
-
     const player = add([
         sprite('link-right'),
-        pos(5,190),
+        pos(10,190),
+        scale(0.8),
         {
             //rigth by default
             dir:vec2(1,0)
@@ -176,8 +273,19 @@ scene("game", ({level,score}) => {
         spawnKaboom(player.pos.add(player.dir.scale(48)))
     })
 
+    // Kill skeletor actions
     collides("kaboom", "skeletor", (k,s) => {
-        camShake(4)
+        camShake(5)
+        wait(1,() => {
+            destroy(k)
+        })
+        destroy(s)
+        scoreLabel.value++
+        scoreLabel.text = scoreLabel.value
+    })  
+
+    collides("kaboom", "horizontalskeletor", (k,s) => {
+        camShake(5)
         wait(1,() => {
             destroy(k)
         })
@@ -187,7 +295,7 @@ scene("game", ({level,score}) => {
     })
 
     // Slicer actions
-    const SLICER_SPEED = 350
+    const SLICER_SPEED = 200
 
     action('slicer', (s) => {
         s.move(s.dir * SLICER_SPEED, 0)
@@ -196,6 +304,17 @@ scene("game", ({level,score}) => {
     collides('slicer', 'wall', (s) => {
         s.dir = -s.dir
     })
+
+    // Vertical Slicer actions
+
+    action('verticalslicer', (s) => {
+        s.move(0,s.dir * SLICER_SPEED,)
+    })
+
+    collides('verticalslicer', 'wall', (s) => {
+        s.dir = -s.dir
+    })
+    
 
     // Skeletor actions
     const SKELETOR_SPEED = 300
@@ -212,6 +331,23 @@ scene("game", ({level,score}) => {
     })
 
     collides('skeletor', 'wall', (s) => {
+        s.dir = -s.dir
+    })
+
+    // horizontal skeletor actions
+
+    action('horizontalskeletor', (s) => {
+        s.move(s.dir * SKELETOR_SPEED,0)
+        s.timer -= dt()
+
+        // This will change the direction of skeletor random
+        if (s.timer <= 0) {
+            s.dir = - s.dir
+            s.timer = rand(5)
+        }
+    })
+
+    collides('horizontalskeletor', 'wall', (s) => {
         s.dir = -s.dir
     })
 
