@@ -3,6 +3,7 @@ kaboom({
     fullscreen: true,
     scale: 1,
     debug: true,
+    clearColor: [0,0,0,1]
 });
 
 const MOVE_SPEED = 120
@@ -105,7 +106,7 @@ scene("game", ({level,score}) => {
     }
     addLevel(maps[level],levelCfg)
 
-    add(sprite[('bg'), layer('bg')])
+    add([sprite('bg'), layer('bg')])
 
     const scoreLabel = add([
         text('0'),
@@ -186,7 +187,7 @@ scene("game", ({level,score}) => {
     })
 
     // Slicer actions
-    const SLICER_SPEED = 500
+    const SLICER_SPEED = 450
 
     action('slicer', (s) => {
         s.move(s.dir * SLICER_SPEED, 0)
@@ -225,4 +226,4 @@ scene('lose', ({score}) => {
     add([text(score,32),origin("center"),pos(width()/ 2,height() / 2)])
 })  
 
-start('game', {level:1, score:0});
+start('game', {level:0, score:0});
