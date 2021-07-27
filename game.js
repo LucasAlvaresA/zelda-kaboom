@@ -5,7 +5,9 @@ kaboom({
     debug: true,
 });
 
-// Error with import images,fix this plz
+const MOVE_SPEED = 120
+
+// Error with import images
 
 // loadRoot("./assets/sprites/");
 // loadSprite("link-left", "/link-left.png");
@@ -31,10 +33,10 @@ kaboom({
 // loadSprite("bg", "/bg.png");
 
 loadRoot('https://i.imgur.com/')
-loadSprite('link-going-left', '1Xq9biB.png')
-loadSprite('link-going-right', 'yZIb8O2.png')
-loadSprite('link-going-down', 'tVtlP6y.png')
-loadSprite('link-going-up', 'UkV0we0.png')
+loadSprite('link-left', '1Xq9biB.png')
+loadSprite('link-right', 'yZIb8O2.png')
+loadSprite('link-down', 'tVtlP6y.png')
+loadSprite('link-up', 'UkV0we0.png')
 loadSprite('left-wall', 'rfDoaa1.png')
 loadSprite('top-wall', 'QA257Bj.png')
 loadSprite('bottom-wall', 'vWJWmvb.png')
@@ -80,10 +82,10 @@ scene("game", ({level,score}) => {
         "y": [sprite("top-left-wall"),solid()],
         "z": [sprite("bottom-right-wall"),solid()],
         "%": [sprite("left-door"),solid()],
-        "^": [sprite("top-door"),solid()],
-        "$": [sprite("stairs"),solid()],
-        "*": [sprite("slicer"),solid()],
-        "}": [sprite("skeletor"),solid()],
+        "^": [sprite("top-door")],
+        "$": [sprite("stairs")],
+        "*": [sprite("slicer")],
+        "}": [sprite("skeletor")],
         ")": [sprite("lanterns"),solid()],
         "(": [sprite("fire-pot"),solid()],
     }
@@ -96,14 +98,51 @@ scene("game", ({level,score}) => {
         pos(400,450),
         layer('ui'),
         {
-            value:'test',
+            value: score,
         },
         scale(2)
     ])
-    add([text('level' + 'test-level'), pos(400,485), scale(2)])
+    add([text('level' + parseInt(level + 1)), pos(400,485), scale(2)])
+
+    const player = add([
+        sprite('link-right'),
+        pos(5,190),
+        {
+            //rigth by default
+            dir:vec2(1,0)
+        }
+    ])
+
+    player.action(() => {
+        player.resolve()
+    })
+
+    keyDown('left', () => {
+        player.changeSprite('link-left')
+        player.move(-MOVE_SPEED,0)
+        player.dir = vec2(-1,0)
+    })
+
+    keyDown('right', () => {
+        player.changeSprite('link-right')
+        player.move(MOVE_SPEED,0)
+        player.dir = vec2(1,0)
+    })
+
+    keyDown('up', () => {
+        player.changeSprite('link-up')
+        player.move(0,-MOVE_SPEED)
+        player.dir = vec2(0,-1)
+    })
+
+    keyDown('down', () => {
+        player.changeSprite('link-down')
+        player.move(0,MOVE_SPEED)
+        player.dir = vec2(0,1)
+    })
 
 });
 
   
 
-start("game");
+start("game", {level:0, score:0});
