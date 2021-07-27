@@ -6,7 +6,7 @@ kaboom({
     clearColor: [0,0,0,1]
 });
 
-const MOVE_SPEED = 120
+const MOVE_SPEED = 160
 
 // Error with import images
 
@@ -61,20 +61,20 @@ scene("game", ({level,score}) => {
 
     const maps = [
         [
-            'ycc)cc^ccw',
-            'a        b',
-            'a      * b',
-            'a    (   b',
+            'ycc)cc)ccw',
+            'a(   $  (b',
+            'a  *     b',
+            'a     }  b',
             '%        b',
-            'a    (   b',
-            'a   *    b',
-            'a        b',
+            'a   }    b',
+            'a  *     b',
+            'a(      (b',
             'xdd)dd)ddz',
         ],
         [
             'yccccccccw',
-            'a  }     b',
-            ')     $  )',
+            'a       $b',
+            ')  }     )',
             'a        b',
             'a    }   b',
             'a        b',
@@ -101,8 +101,8 @@ scene("game", ({level,score}) => {
         "$": [sprite("stairs"),'next-level'],
         "*": [sprite("slicer"), 'slicer', {dir: -1},'dangerous'],
         "}": [sprite("skeletor"),'skeletor',{dir: -1, timer: 0},'dangerous'],
-        ")": [sprite("lanterns"),solid()],
-        "(": [sprite("fire-pot"),solid()],
+        ")": [sprite("lanterns"),solid(),'wall'],
+        "(": [sprite("fire-pot"),solid(),'wall'],
     }
     addLevel(maps[level],levelCfg)
 
@@ -187,7 +187,7 @@ scene("game", ({level,score}) => {
     })
 
     // Slicer actions
-    const SLICER_SPEED = 450
+    const SLICER_SPEED = 350
 
     action('slicer', (s) => {
         s.move(s.dir * SLICER_SPEED, 0)
