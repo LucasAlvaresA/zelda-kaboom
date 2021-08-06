@@ -84,18 +84,18 @@ scene("game", ({level,score}) => {
             'a(      (b',
             'xddddddddz',
         ],
-        [
-            // Level 3
-            'yccccccccw',
-            'a((((((((b',
-            ')        )',
-            'a{       b',
-            'a     }~$b',
-            'a{       b',
-            ')   ~    )',
-            'a((((((((b',
-            'xddddddddz',
-        ],
+//         [
+//             // Level 3
+//             'yccccccccw',
+//             'a((((((((b',
+//             ')        )',
+//             'a{       b',
+//             'a     }~$b',
+//             'a{       b',
+//             ')   ~    )',
+//             'a((((((((b',
+//             'xddddddddz',
+//         ],
         [
             // Level 4
             'ycc)cc)ccw',
